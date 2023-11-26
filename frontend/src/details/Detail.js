@@ -59,6 +59,15 @@ const Detail = ({ route, navigation }) => {
     apiGetTicketsOrderedByUserID();
   }, [JSON.stringify(route.params.userID)]);
 
+  let handlePressTicket = (ticket) => {
+    setIsOpenModal(true);
+    setTicketChosen(ticket);
+    setImageMovieChosen(imagesNowShowing.find((o) => o.key === ticket.movieID));
+    let date = new Date(ticket.date);
+    setFormatDate(
+      `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
+    );
+  };
 
   return (
     <ImageBackground
@@ -116,6 +125,7 @@ const Detail = ({ route, navigation }) => {
           {ticketsOrdered.map((ticket, index) => (
             <TouchableOpacity
               key={index}
+              onPress={() => handlePressTicket(ticket)}
             >
               <View style={styles.viewRowTable}>
                 <Text style={{ ...styles.txtBodyTable, ...styles.columnMovie }}>
