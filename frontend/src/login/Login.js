@@ -1,14 +1,101 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput } from 'react-native'
+import React, { useState } from 'react'
+import axios from 'axios'
+import Toast from 'react-native-toast-message'
 
-const Login = () => {
+const Login = ({navigation}) => {
+  const [email, setEmail] = useState("min@gmail.com")
+  const [password, setPassword] = useState("Min28062812")
+
   return (
-    <View>
-      <Text>Login</Text>
-    </View>
+    <ImageBackground
+      source={require("../../assets/imgBackground/sky-star.jpg")}
+      style={styles.container}
+    >
+      <View style={styles.formLogin}>
+        <Text style={{fontSize : 35, fontWeight : 'bold', color : 'white', marginBottom : 20}}>ĐĂNG NHẬP</Text>
+        <View style={styles.formContainer}>
+          <TextInput style={styles.formInput} placeholder='Nhập Email...'
+          value={email}
+          onChangeText={setEmail}
+          />
+          <TextInput style={styles.formInput} placeholder='Nhập Password...'
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+          />
+        </View>
+        <View style={styles.viewRegisterForgot}>
+          <TouchableOpacity>
+            <Text style={{fontSize : 15}}>Quên mật khẩu?</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+            <Text style={{fontSize : 15, color : '#1da1f2'}}>Đăng ký</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.btnLogin}>
+          <Text style={{fontSize : 25, color : 'white', fontWeight : 'bold'}}>LOGIN</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   )
 }
 
 export default Login
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    display  :'flex',
+    flexDirection: "row",
+    justifyContent : 'center',
+    alignItems :'center'
+  },
+  formLogin : {
+    width: "80%",
+    height: "50%",
+    display  :'flex',
+    flexDirection: "column",
+    justifyContent : 'center',
+    alignItems :'center',
+    backgroundColor : "rgba(85,85,85, 1)",
+    borderRadius : 15
+  },
+  formContainer: {
+    width: "90%",
+    height: "35%",
+    display  :'flex',
+    flexDirection: "column",
+    justifyContent : 'space-between',
+    alignItems :'center',
+  },
+  formInput : {
+    width : '100%',
+    height : 60,
+    borderWidth : 1,
+    borderColor  :'white',
+    borderRadius : 15,
+    paddingHorizontal : 10
+  },
+  viewRegisterForgot : {
+    width : '100%',
+    height : 60,
+    display : 'flex',
+    flexDirection : 'row',
+    justifyContent  :'space-between',
+    alignItems : 'center',
+    paddingHorizontal : 20
+  },
+  btnLogin : {
+    width : '90%',
+    height : 60,
+    display  :'flex',
+    flexDirection : 'row',
+    justifyContent : 'center',
+    alignItems  :'center',
+    backgroundColor  :'green',
+    borderRadius : 15
+  }
+})
