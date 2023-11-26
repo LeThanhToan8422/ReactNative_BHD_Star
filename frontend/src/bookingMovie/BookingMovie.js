@@ -121,6 +121,37 @@ const BookingMovie = ({ navigation, route }) => {
     apiGetShowTimeMovie();
   }, [route.params.imageMovie.key]);
 
+  let handlePressCinema = (cinemaID) => {
+    if (
+      !isPressSeenShowTime.isPress[isPressSeenShowTime.id.indexOf(cinemaID)]
+    ) {
+      setIsPressSeenShowTime((prevState) => {
+        let newState = { ...prevState };
+        newState.isPress = newState.isPress.map(isPr => isPr = false)
+        newState.isPress[isPressSeenShowTime.id.indexOf(cinemaID)] = true;
+        return newState;
+      });
+    } else {
+      setIsPressSeenShowTime((prevState) => {
+        let newState = { ...prevState };
+        newState.isPress[isPressSeenShowTime.id.indexOf(cinemaID)] = false;
+        return newState;
+      });
+    }
+  };
+
+  let handlePressShowTime = (showtime) => {
+    navigation.navigate("ChooseSeats", {
+      cinema : movies.cinemas.find(cinema => cinema.cinemaID === isPressSeenShowTime.id[isPressSeenShowTime.isPress.indexOf(true)]),
+      date : movies.movieDates.find(movieDate => movieDate.date.slice(8,10) === dateChosen),
+      movie : movies.movie,
+      showTimeID : showtime.showTimeID,
+      time : showtime.time.slice(0,5),
+      quality : showtime.quality,
+      imageMovie : imageMovie,
+      userID : route.params.userID
+    })
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -205,6 +236,7 @@ const BookingMovie = ({ navigation, route }) => {
                 <TouchableWithoutFeedback
                   key={index.toString()}
                   style={styles.viewCinema}
+                  onPress={() => handlePressCinema(cinema.cinemaID)}
                 >
                   <View
                     style={[
@@ -248,6 +280,7 @@ const BookingMovie = ({ navigation, route }) => {
                                       : "SUB"}
                                   </Text>
                                   <TouchableWithoutFeedback
+                                  onPress={() => handlePressShowTime(showtime)}
                                   >
                                     <View>
                                       <Text style={styles.textTime}>
