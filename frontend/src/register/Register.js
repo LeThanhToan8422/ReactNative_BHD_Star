@@ -21,6 +21,57 @@ const Register = ({navigation}) => {
   const [gender, setGender] = useState(true);
   const [openDate, setOpenDate] = useState(false);
 
+  let handlePressRegister = async () => {
+    let dataUserID = await axios.get("http://10.0.2.2:8080/api/user/get-userID")
+    let userID = `US${dataUserID.data.userID + 1}`
+    let data = await axios.post(
+      "http://10.0.2.2:8080/api/user/post-user",
+      {
+        id : userID,
+        email: email,
+        name : name,
+        phone : phone,
+        date : dateOfBirth,
+        gender : gender === "true" ? true : false
+      }
+    );
+    if(data.data.isInsert){
+      let dataAccountID = await axios.get("http://10.0.2.2:8080/api/account/get-accountID")
+      let accountID = `AC${dataAccountID.data.accountID + 1}`
+      let data = await axios.post(
+        "http://10.0.2.2:8080/api/account/post-account",
+        {
+          id : accountID,
+          email: email,
+          password : password,
+          userID : userID,
+        }
+      );
+      if(data.data.isInsert){
+        Toast.show({
+          type: "success",
+          text1: "Đăng Ký Thành Công!!!",
+          text2: "Vui Lòng Đăng Nhập BHD Star👋",
+        });
+        navigation.navigate("Login");
+      }
+      else{
+        Toast.show({
+          type: "error",
+          text1: "Đăng Ký Thất Bại!!!",
+          text2: "Thông Tin Đăng Ký Không Chính Xác👋",
+        });
+      }
+    }
+    else {
+      Toast.show({
+        type: "error",
+        text1: "Đăng Ký Thất Bại!!!",
+        text2: "Thông Tin Đăng Ký Không Chính Xác👋",
+      });
+    }
+    
+  };
 
   return (
     <ImageBackground
@@ -93,7 +144,7 @@ const Register = ({navigation}) => {
             <Text style={{ fontSize: 15, color: "#1da1f2" }}>Đăng Nhập</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.btnLogin}>
+        <TouchableOpacity style={styles.btnLogin} onPress={handlePressRegister}>
           <Text style={{ fontSize: 25, color: "white", fontWeight: "bold" }}>
             REGISTER
           </Text>
