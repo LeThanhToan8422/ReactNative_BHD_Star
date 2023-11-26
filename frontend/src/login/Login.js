@@ -7,6 +7,30 @@ const Login = ({navigation}) => {
   const [email, setEmail] = useState("min@gmail.com")
   const [password, setPassword] = useState("Min28062812")
 
+  let handlePressLogin = async() => {
+    let data = await axios.post("http://10.0.2.2:8080/api/account/check-account-by-email-password", {
+      email : email,
+      password : password
+    })
+    if(data.data.user.accountContains){
+      Toast.show({
+        type: "success",
+        text1: "Đăng Nhập Thành Công!!!",
+        text2: "Welcome To BHD Star👋",
+      });
+      navigation.navigate("InterfaceTab", {
+        user : data.data.user
+      })
+    }
+    else{
+      Toast.show({
+        type: "error",
+        text1: "Đăng Nhập Thất Bại!!!",
+        text2: "Email Hoặc Password Không Chính Xác👋",
+      });
+    }
+  }
+
   return (
     <ImageBackground
       source={require("../../assets/imgBackground/sky-star.jpg")}
@@ -33,7 +57,7 @@ const Login = ({navigation}) => {
             <Text style={{fontSize : 15, color : '#1da1f2'}}>Đăng ký</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.btnLogin}>
+        <TouchableOpacity style={styles.btnLogin} onPress={handlePressLogin}>
           <Text style={{fontSize : 25, color : 'white', fontWeight : 'bold'}}>LOGIN</Text>
         </TouchableOpacity>
       </View>
