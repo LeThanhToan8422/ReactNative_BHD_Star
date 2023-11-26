@@ -30,6 +30,22 @@ const Personal = ({ route, navigation }) => {
     },
   ]);
 
+  let handlePressInfoUser = (feature) => {
+    switch (feature.name) {
+      case "Edit/Update":
+        navigation.navigate("FormUpdateUser", {userID : user.userID})
+        break;
+      case "Change Password":
+        navigation.navigate("FormChangePassword", {userID : user.userID})
+        break;
+      case "Details":
+        navigation.navigate("Detail", {userID : user.userID})
+        break;
+      case "Log Out":
+        navigation.navigate("Login")
+        break;
+    }
+  };
 
   return (
     <ImageBackground
@@ -58,7 +74,7 @@ const Personal = ({ route, navigation }) => {
       </View>
       <View style={styles.viewInforUser}>
         {featureUsers.map((f, index) => (
-          <TouchableOpacity key={index}>
+          <TouchableOpacity key={index} onPress={() => handlePressInfoUser(f)}>
             <View key={f.name} style={styles.viewContainerInfo}>
               <View style={styles.viewContentInfo}>
                 <Ionicons
