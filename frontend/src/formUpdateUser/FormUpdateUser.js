@@ -40,6 +40,35 @@ const FormUpdateUser = ({route, navigation}) => {
     setGender(value)
   }
 
+  let handlePressUpdate = async () => {
+    let data = await axios.put(
+      "http://10.0.2.2:8080/api/user/put-user",
+      {
+        id : userID,
+        email: email,
+        name : name,
+        phone : phone,
+        date : dateOfBirth,
+        gender : gender === "true" ? true : false
+      }
+    );
+    if(data.data.isUpdate){
+      Toast.show({
+        type: "success",
+        text1: "Cập Nhật Thành Công!!!",
+        text2: "Chúc Mừng Bạn Đã Cập Nhật Thông Tin Thành Công👋",
+      });
+      navigation.goBack()
+    }
+    else {
+      Toast.show({
+        type: "error",
+        text1: "Cập Nhật Thất Bại!!!",
+        text2: "Bạn Đã Cập Nhật Thông Tin Thất Bại👋",
+      });
+    }
+    
+  };
 
   return (
     <ImageBackground
@@ -106,7 +135,7 @@ const FormUpdateUser = ({route, navigation}) => {
             </Picker>
           </View>
         </View>
-        <TouchableOpacity style={styles.btnLogin}>
+        <TouchableOpacity style={styles.btnLogin} onPress={handlePressUpdate}>
           <Text style={{ fontSize: 25, color: "white", fontWeight: "bold" }}>
             UPDATE
           </Text>
