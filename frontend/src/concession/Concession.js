@@ -67,7 +67,43 @@ const Concession = ({ navigation, route }) => {
     );
   }, [quantityConcession]);
 
-  
+  let handlePressIconSub = (index) => {
+    setQuantityConcession((prevQuantity) => {
+      let newQuantity = [...prevQuantity];
+      newQuantity[index] === 0
+        ? (newQuantity[index] = 0)
+        : (newQuantity[index] -= 1);
+      return newQuantity;
+    });
+  };
+
+  let handlePressIconPlus = (index) => {
+    setQuantityConcession((prevQuantity) => {
+      let newQuantity = [...prevQuantity];
+      newQuantity[index] += 1;
+      return newQuantity;
+    });
+  };
+
+  let handlePressFinishPayment = () => {
+    navigation.navigate("FinishPayment", {
+      nameCinema: nameCinema,
+      date: date,
+      time: time,
+      quality: route.params.quality,
+      seatsChosen: route.params.seatsChosen,
+      pricesOfSeats: route.params.pricesOfSeats,
+      concession: concession,
+      quantityConcession: quantityConcession,
+      concessionChosen: concessionChosen,
+      imageMovie: route.params.imageMovie,
+      movieID: route.params.movieID,
+      cinemaID: route.params.cinemaID,
+      movieDateID: route.params.movieDateID,
+      showTimeID: route.params.showTimeID,
+      userID: route.params.userID,
+    });
+  };
   return (
     <ImageBackground
       source={require("../../assets/imgBackground/sky-star.jpg")}
@@ -144,6 +180,7 @@ const Concession = ({ navigation, route }) => {
                       name="remove-circle-outline"
                       size={22}
                       color={"#c2c2c2"}
+                      onPress={() => handlePressIconSub(index)}
                     />
                     <Text style={{ color: "white", marginHorizontal: 10 }}>
                       {quantityConcession[index]}
@@ -152,6 +189,7 @@ const Concession = ({ navigation, route }) => {
                       name="add-circle-outline"
                       size={22}
                       color={"#63b133"}
+                      onPress={() => handlePressIconPlus(index)}
                     />
                   </View>
                   <Text style={{ color: "white" }}>
@@ -222,7 +260,7 @@ const Concession = ({ navigation, route }) => {
             })}
           </Text>
         </View>
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={handlePressFinishPayment}>
           <View
             style={{
               flexDirection: "row",
