@@ -30,6 +30,18 @@ const DetailMovie = ({ navigation, route }) => {
     setMovie(route.params.movie);
   }, [route.params.imageMovie]);
 
+  let handlePressMoreView = (height) => {
+    isPressMoreView ? setIsPressMoreView(false) : setIsPressMoreView(true);
+    isPressMoreView
+      ? setHeightContentFilm(130)
+      : setHeightContentFilm(height / 2.2);
+  };
+
+  let handlePressBooking = () => {
+    navigation.navigate("BookingMovie", {
+      imageMovie: route.params.imageMovie,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -92,6 +104,7 @@ const DetailMovie = ({ navigation, route }) => {
             <View
               style={{
                 color: "rgba(255,255,255,0.8)",
+                // height: heightContentFilm,
               }}
             >
               <Text style={{ color: "rgba(255,255,255,0.8)" }}>
@@ -100,6 +113,7 @@ const DetailMovie = ({ navigation, route }) => {
                   : movie.contentFilm}
                 <Text
                   style={{ color: "#50fa7b" }}
+                  onPress={() => handlePressMoreView(movie.contentFilm.length)}
                 >
                   {movie.contentFilm.length > 250 && isPressMoreView === false
                     ? "...More View"
@@ -143,7 +157,7 @@ const DetailMovie = ({ navigation, route }) => {
               <Text style={styles.textProducer}>{movie.actor}</Text>
             </View>
           </View>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={handlePressBooking}>
             <View style={styles.btnBooking}>
               <Text style={styles.textBtnBooking}>Booking</Text>
             </View>
