@@ -19,6 +19,44 @@ const FormChangePassword = ({ route, navigation }) => {
   const [eyeNewPassword, setEyeNewPassword] = useState(true);
   const [eyeAgainNewPassword, setEyeAgainNewPassword] = useState(true);
 
+  let handlePressChangePassword = async () => {
+    let data = await axios.post(
+      "http://10.0.2.2:8080/api/account/get-account-by-userID",
+      {
+        id : route.params.userID
+      }
+    );
+    if (data.data.account.password === password) {
+      if(newPassword === againNewPassword){
+        let dataPut = await axios.put(
+          "http://10.0.2.2:8080/api/account/put-account",
+          {
+            id : data.data.account.accountID,
+            password : newPassword
+          }
+        );
+        Toast.show({
+          type: "success",
+          text1: "Cập Nhật Thành Công!!!",
+          text2: "Thay Đổi Mật Khẩu Thành Công👋",
+        });
+        navigation.goBack()
+      }
+      else{
+        Toast.show({
+          type: "error",
+          text1: "Mật Khẩu Nhập Lại Không Chính Xác!!!",
+          text2: "Vui Lòng Nhập Lại Mật Khẩu👋",
+        });
+      }
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Mật Khẩu Hiện Tại Không Chính Xác!!!",
+        text2: "Vui Lòng Nhập Lại Mật Khẩu👋",
+      });
+    }
+  };
 
   return (
     <ImageBackground
@@ -103,7 +141,7 @@ const FormChangePassword = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <TouchableOpacity style={styles.btnLogin}>
+        <TouchableOpacity style={styles.btnLogin} onPress={handlePressChangePassword}>
           <Text style={{ fontSize: 25, color: "white", fontWeight: "bold" }}>
             Change Password
           </Text>
