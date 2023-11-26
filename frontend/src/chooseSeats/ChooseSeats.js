@@ -101,6 +101,55 @@ const ChooseSeats = ({ navigation, route }) => {
     setTime(`${route.params.time} - ${hours}:${minutes}`);
   }, [route.params]);
 
+  let handlePressSeat = async (seat) => {
+    if (!seatsOrdered.includes(seat)) {
+      if (seatsChosen.includes(seat)) {
+        setSeatsChosen((prevSeats) =>
+          prevSeats.filter((seatChosen) => seatChosen !== seat)
+        );
+      } else {
+        setSeatsChosen([...seatsChosen, seat]);
+      }
+      let data = await axios.post(
+        "http://10.0.2.2:8080/api/fare/get-prices-of-fare-by-cinemaID",
+        {
+          cinemaID: route.params.cinema.cinemaID,
+          time: route.params.time,
+          date: route.params.date.date.slice(0, 10),
+          quantity: seatsChosen.includes(seat)
+            ? seatsChosen.length - 1
+            : seatsChosen.length + 1,
+        }
+      );
+      setPricesOfSeats(data.data.price);
+    }
+  };
+
+  let handlePressFinishPayment = () => {
+    if (seatsChosen.length > 0) {
+      navigation.navigate("Concession", {
+        nameCinema: nameCinema,
+        date: date,
+        time: time,
+        quality: route.params.quality,
+        seatsChosen: seatsChosen,
+        pricesOfSeats: pricesOfSeats,
+        imageMovie: route.params.imageMovie,
+        movieID: route.params.movie.movieID,
+        cinemaID: route.params.cinema.cinemaID,
+        movieDateID: route.params.date.movieDateID,
+        showTimeID: route.params.showTimeID,
+        userID: route.params.userID,
+      });
+    }
+    else{
+      Toast.show({
+        type: "error",
+        text1: "Vui Lòng Chọn Ghế Ngồi!!!",
+        text2: "Tối Thiểu Chọn 1 Ghế Ngồi👋",
+      });
+    }
+  };
 
   return (
     <ImageBackground
@@ -215,6 +264,7 @@ const ChooseSeats = ({ navigation, route }) => {
                           ? "rgba(89,178,42,1)"
                           : "rgba(74,74,72,1)"
                       }
+                      onPress={() => handlePressSeat(seat)}
                     />
                   ))}
                 </View>
@@ -236,6 +286,7 @@ const ChooseSeats = ({ navigation, route }) => {
                           ? "rgba(89,178,42,1)"
                           : "rgba(74,74,72,1)"
                       }
+                      onPress={() => handlePressSeat(seat)}
                     />
                   ))}
                 </View>
@@ -257,6 +308,7 @@ const ChooseSeats = ({ navigation, route }) => {
                           ? "rgba(89,178,42,1)"
                           : "rgba(74,74,72,1)"
                       }
+                      onPress={() => handlePressSeat(seat)}
                     />
                   ))}
                 </View>
@@ -310,7 +362,7 @@ const ChooseSeats = ({ navigation, route }) => {
             })}
           </Text>
         </View>
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={handlePressFinishPayment}>
           <View
             style={{
               flexDirection: "row",
