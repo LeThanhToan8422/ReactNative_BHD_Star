@@ -18,6 +18,54 @@ const FinishPayment = ({ navigation, route }) => {
   const [checked, setChecked] = useState("");
   const [boxChecked, setBoxChecked] = useState(false);
 
+  let handlePressFinishPayment = async () => {
+    if (checked !== "") {
+      if (boxChecked) {
+        let dataID = await axios.get(
+          "http://10.0.2.2:8080/api/ticket/get-ticketID"
+        );
+        let data = await axios.post(
+          "http://10.0.2.2:8080/api/ticket/post-ticket",
+          {
+            id: `TK${dataID.data.ticketID + 1}`,
+            quantityTickets: route.params.seatsChosen.length,
+            seats: route.params.seatsChosen,
+            combos: route.params.concessionChosen.filter((cb) => cb != null),
+            totalPrices:
+              route.params.pricesOfSeats +
+              route.params.concession.reduce((total, c2, index) => {
+                return (
+                  total + c2.prices * route.params.quantityConcession[index]
+                );
+              }, 0),
+            cinema: route.params.cinemaID,
+            movie: route.params.movieID,
+            movieDate: route.params.movieDateID,
+            showTime: route.params.showTimeID,
+            userID : route.params.userID
+          }
+        );
+        Toast.show({
+          type: "success",
+          text1: "Đặt Vé Thành Công!!!",
+          text2: "Chúc Bạn Có Buổi Xem Phim Vui Vẻ👋",
+        });
+        navigation.navigate("Home");
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Vui Lòng Chọn Đồng Ý Với Các Điều Khoản",
+          text2: "Chúc Bạn Có Buổi Xem Phim Vui Vẻ👋",
+        });
+      }
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Vui Lòng Chọn Phương Thức Thanh Toán",
+        text2: "Chúc Bạn Có Buổi Xem Phim Vui Vẻ👋",
+      });
+    }
+  };
 
   return (
     <ImageBackground
@@ -223,7 +271,7 @@ const FinishPayment = ({ navigation, route }) => {
             </Text>
           </View>
         </View>
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={handlePressFinishPayment}>
           <View style={styles.btnPaymentFinish}>
             <Text style={styles.textBtnFinish}>Finish Payment (3/3)</Text>
           </View>
