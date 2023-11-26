@@ -93,6 +93,7 @@ const SlideMovie = ({navigation, userID}) => {
           marginLeft: 10,
           marginRight: 10,
         }}
+        onPress={handlePressImageMovie}
       >
         <Image
           source={item.src}
@@ -105,11 +106,38 @@ const SlideMovie = ({navigation, userID}) => {
     );
   };
 
+  let handlePressBtnShow = () => {
+    setIsPressBtnShow(true);
+  };
+
+  let handlePressBtnCome = () => {
+    setIsPressBtnShow(false);
+  };
+
+  let handlePressImageMovie = () => {
+    navigation.navigate("DetailMovie", {
+      imageMovie: isPressBtnShow
+        ? imagesNowShowing[activeIndex]
+        : imagesComingSoon[activeIndex],
+      movie: movie,
+    });
+  };
+
+  let handlePressBooking = () => {
+    navigation.navigate('BookingMovie', {
+      imageMovie: isPressBtnShow
+        ? imagesNowShowing[activeIndex]
+        : imagesComingSoon[activeIndex],
+      userID : userID
+    })
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.viewButton}>
         <TouchableWithoutFeedback
           style={styles.touchButton}
+          onPress={handlePressBtnShow}
         >
           <View
             style={[
@@ -133,6 +161,7 @@ const SlideMovie = ({navigation, userID}) => {
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback
           style={styles.touchButton}
+          onPress={handlePressBtnCome}
         >
           <View
             style={[
@@ -174,7 +203,7 @@ const SlideMovie = ({navigation, userID}) => {
       </SafeAreaView>
 
       <Text style={styles.nameMovie}>{movie.nameEN}</Text>
-      <TouchableWithoutFeedback>
+      <TouchableWithoutFeedback onPress={handlePressBooking}>
         <View style={styles.btnBooking}>
           <Text style={styles.textBtnBooking}>Booking</Text>
         </View>
